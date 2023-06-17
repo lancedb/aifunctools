@@ -1,6 +1,6 @@
 [project]
 name = "aifunctools"
-version = "0.0.1"
+version = "0.1"
 description = "Utilities for AI functions"
 readme = "README.md" # Optional
 requires-python = ">=3.8"
