@@ -1,6 +1,5 @@
 from aifunctools.openai_funcs import complete_with_functions
 
-
 def get_current_weather(location: str, unit: str) -> dict:
     """
     Get the current weather in a given location
