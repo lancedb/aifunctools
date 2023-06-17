@@ -1,0 +1,44 @@
+[project]
+name = "aifunctools"
+version = "0.0.1"
+description = "Utilities for AI functions"
+readme = "README.md" # Optional
+requires-python = ">=3.8"
+license = {file = "LICENSE.txt"}
+
+keywords = ["openai", "machine learning", "gpt functions"]
+
+authors = [
+  {name = "Chang She", email = "chang@lancedb.com" }
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Scientific/Engineering",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+dependencies = [
+  "openai", "docstring-parser"
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+"Homepage" = "https://github.com/lancedb/aifunctools"
+"Bug Reports" = "https://github.com/lancedb/aifunctools/issues"
+"Source" = "https://github.com/lancedb/aifunctools/"
+
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
