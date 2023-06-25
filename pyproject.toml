@@ -1,6 +1,6 @@
 [project]
 name = "aifunctools"
-version = "0.1.1"
+version = "0.1.2"
 description = "Utilities for AI functions"
 readme = "README.md" # Optional
 requires-python = ">=3.8"
@@ -27,7 +27,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "openai", "docstring-parser", "pydantic>=2.0b3", "marvin"
+  "openai", "docstring-parser", "pydantic"
 ]
 
 [project.optional-dependencies]

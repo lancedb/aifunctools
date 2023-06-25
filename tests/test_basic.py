@@ -1,5 +1,4 @@
 from aifunctools.openai_funcs import complete_with_functions
-from aifunctools.parser import parse_function
 
 
 def get_current_weather(location: str, unit: str, foo: int=None, bar: list[bool]=None) -> dict:

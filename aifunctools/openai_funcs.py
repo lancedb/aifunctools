@@ -1,8 +1,6 @@
 import json
-from inspect import signature
 import os
 
-from docstring_parser import parse
 import openai
 
 from aifunctools.parser import OpenAIFunction
@@ -39,7 +37,7 @@ def complete_with_functions(question, *functions):
                 for c in response["choices"]]):
         return response
 
-    messages = call_functions(response, registry)
+    messages, results = call_functions(response, registry)
     req["messages"].extend(messages)
     return openai.ChatCompletion.create(**req)
 
@@ -53,6 +51,7 @@ def call_functions(response, registry):
     :return:
     """
     messages = []
+    all_results = {}
     for c in response["choices"]:
         if c["finish_reason"] == "function_call":
             msg = c["message"]
@@ -66,4 +65,5 @@ def call_functions(response, registry):
             result = f(**args)
 
             messages.append({"role": "function", "name": name, "content": json.dumps(result)})
-    return messages
+            all_results[name] = result
+    return messages, all_results

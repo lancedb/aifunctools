@@ -7,8 +7,8 @@ from inspect import signature
 from typing import Callable, Any, Optional
 
 from docstring_parser import parse
-from pydantic import BaseModel, validate_call
-from pydantic._internal._validate_call import ValidateCallWrapper
+from pydantic import BaseModel, validate_arguments
+
 
 from aifunctools.utils import function_to_model, schema_properties_to_json
 
@@ -25,7 +25,7 @@ class OpenAIFunction:
         descriptor, validated = parse_function(func)
         return cls(validated, **descriptor)
 
-    def __init__(self, validated: ValidateCallWrapper,
+    def __init__(self, validated,
                  name: str,
                  description: str = None,
                  parameters: list[dict] = None) -> None:
@@ -48,6 +48,18 @@ class OpenAIFunction:
             "parameters": self.parameters
         }
 
+    def from_openai_response(self, response: dict):
+        for c in response["choices"]:
+            if c["finish_reason"] == "function_call":
+                msg = c["message"]
+                # find and evaluate the function call
+                func_data = msg["function_call"]
+                name = func_data["name"]
+                if name == self.name:
+                    args = json.loads(func_data["arguments"])
+                    result = self(**args)
+                    return result
+
 
 def parse_function(func: Callable):
     """
@@ -61,6 +73,11 @@ def parse_function(func: Callable):
     schema = model.model_json_schema()
     docs = parse(func.__doc__)
     param_docs = {p.arg_name: p.description for p in docs.params}
+    desc = ""
+    if docs.short_description:
+        desc += docs.short_description
+    if docs.long_description:
+        desc += "\n\n" + docs.long_description
 
     properties = schema_properties_to_json(schema["properties"])
     for name, prop in properties.items():
@@ -68,11 +85,11 @@ def parse_function(func: Callable):
 
     descriptor = {
             "name": func.__name__,
-            "description": docs.short_description + "\n\n" + docs.long_description,
+            "description": desc,
             "parameters": {
                 "type": "object",
                 "properties": properties,
-                "required": schema["required"]
+                "required": schema.get("required", [])
             }
         }
-    return descriptor, validate_call(func)
+    return descriptor, validate_arguments(func)
